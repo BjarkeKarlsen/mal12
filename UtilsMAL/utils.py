@@ -24,3 +24,13 @@ def L2(X):
 
 def L2Dot(X):
     return np.sqrt(np.dot(X,X))
+
+# import os
+# def GetOS():
+#     return dir if os.name == 'nt' else ls
+
+# # The Normal Equation p.134
+# def GetOptiomalWeights(X, y):
+#     X_b = np.c_[np.ones((X.shape[0], 1)), X]  # Concatenate a column of ones to X
+#     w = np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(y)
+#     return w
