@@ -12853,12 +12853,12 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Qa, code review..cell 1) function setup</span>
@@ -12874,6 +12874,8 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">f1_score</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">'../'</span><span class="p">))</span>
 <span class="kn">from</span> <span class="nn">libitmal</span> <span class="kn">import</span> <span class="n">dataloaders</span> <span class="k">as</span> <span class="n">itmaldataloaders</span> <span class="c1"># Needed for load of iris, moon and mnist</span>
 
 <span class="n">currmode</span><span class="o">=</span><span class="s2">"N/A"</span> <span class="c1"># GLOBAL var!</span>
@@ -13012,12 +13014,39 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>OK(function setup)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Start with setting up the data with the function <code>LoadAndSetUpData('iris')</code>, which load the dataset based on a string. It can load different data 'iris', 'moon', or 'mnist'. Inside the function it check the the data is valid and splits it into train and test set.</p>
+<p>Afterwards we set up the search parameters as a support vecotr machine classifier with the value <code>gamma=0.001</code>. The gamma influence the decision boundary, so a lower gamma means it is more sensivtive to individual data points.</p>
+<p>We specifi some of the hyperparameter for the (full) grid search. Here we try out the specified combination of <code>kernel</code> and <code>C</code> for the model , and then prints the hyperparameter set with the highest score. <code>kernel</code> specifies that the grid search will use two different kernel types. The ``rbf<code>stand for radial basis function.</code>C` defines the values for the regularization parameter. The requlaization is used elude overfitting, because model learns the training data too well and struggles to generalize to new, unseen data.</p>
+<p>The setting <code>CV</code> stands for how many cross-validation. <code>VERBOSE</code> is used for</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Qa, code review..cell 2) the actual grid-search</span>
@@ -13029,7 +13058,7 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 <span class="c1"># Setup search parameters</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span>
     <span class="n">gamma</span><span class="o">=</span><span class="mf">0.001</span>
-<span class="p">)</span>  <span class="c1"># NOTE: gamma="scale" does not work in older Scikit-learn frameworks,</span>
+<span class="p">)</span>  <span class="c1"># NOTE: gamma="scale" does *not work in older Scikit-learn frameworks,</span>
 <span class="c1"># FIX:  replace with model = svm.SVC(gamma=0.001)</span>
 
 <span class="n">tuning_parameters</span> <span class="o">=</span> <span class="p">{</span>
@@ -13056,6 +13085,62 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 <span class="n">b0</span><span class="p">,</span> <span class="n">m0</span> <span class="o">=</span> <span class="n">FullReport</span><span class="p">(</span><span class="n">grid_tuned</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'OK(grid-search)'</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>DATA: iris..
+  org. data:  X.shape      =(  150;    4), y.shape      =(  150)
+  train data: X_train.shape=(  105;    4), y_train.shape=(  105)
+  test data:  X_test.shape =(   45;    4), y_test.shape =(   45)
+
+SEARCH TIME: 2.60 sec
+
+Best model set found on train set:
+
+	best parameters={'C': 1, 'kernel': 'linear'}
+	best 'f1_micro' score=0.9714285714285715
+	best index=2
+
+Best estimator CTOR:
+	SVC(C=1, gamma=0.001, kernel='linear')
+
+Grid scores ('f1_micro') on development set:
+	[ 0]: 0.962 (+/-0.093) for {'C': 0.1, 'kernel': 'linear'}
+	[ 1]: 0.371 (+/-0.038) for {'C': 0.1, 'kernel': 'rbf'}
+	[ 2]: 0.971 (+/-0.047) for {'C': 1, 'kernel': 'linear'}
+	[ 3]: 0.695 (+/-0.047) for {'C': 1, 'kernel': 'rbf'}
+	[ 4]: 0.952 (+/-0.085) for {'C': 10, 'kernel': 'linear'}
+	[ 5]: 0.924 (+/-0.097) for {'C': 10, 'kernel': 'rbf'}
+
+Detailed classification report:
+	The model is trained on the full development set.
+	The scores are computed on the full evaluation set.
+
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        16
+           1       1.00      0.94      0.97        18
+           2       0.92      1.00      0.96        11
+
+    accuracy                           0.98        45
+   macro avg       0.97      0.98      0.98        45
+weighted avg       0.98      0.98      0.98        45
+
+
+CTOR for best model: SVC(C=1, gamma=0.001, kernel='linear')
+
+best: dat=iris, score=0.97143, model=SVC(C=1,kernel='linear')
+
+OK(grid-search)
+</pre>
 </div>
 </div>
 </div>
