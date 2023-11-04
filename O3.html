@@ -7685,17 +7685,21 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="heading_2">SWMAL Exercise<a class="anchor-link" href="#SWMAL-Exercise">¶</a></h1><h2 id="heading_3">Generalization Error<a class="anchor-link" href="#Generalization-Error">¶</a></h2><p>In this exercise, we need to explain all important overall concepts in training. Let's begin with Figure 5.3 from Deep Learning (Ian Goodfellow, et. al. [DL]), that pretty much sums it all up</p>
+<h1 id="heading_2">SWMAL Exercise<a class="anchor-link" href="#SWMAL-Exercise">¶</a></h1><h2 id="heading_3">Generalization Error<a class="anchor-link" href="#Generalization-Error">¶</a></h2><details><summary>Description</summary>
+In this exercise, we need to explain all important overall concepts in training. Let's begin with Figure 5.3 from Deep Learning (Ian Goodfellow, et. al. [DL]), that pretty much sums it all up
+
 <img alt="WARNING: could not get image from server." src="https://itundervisning.ase.au.dk/SWMAL/L08/Figs/dl_generalization_error.png" style="height:500px"/>
-<h3 id="heading_4">Qa) On Generalization Error<a class="anchor-link" href="#Qa)-On-Generalization-Error">¶</a></h3><p>Write a detailed description of figure 5.3 (above) for your hand-in.</p>
+</details>
+<h3 id="heading_4">Qa) On Generalization Error<a class="anchor-link" href="#Qa)-On-Generalization-Error">¶</a></h3><details><summary>Description</summary>
+Write a detailed description of figure 5.3 (above) for your hand-in.
+
 <p>All concepts in the figure must be explained</p>
 <ul>
 <li>training/generalization error,</li>
 <li>underfit/overfit zone,</li>
 <li>optimal capacity,</li>
 <li>generalization gab,</li>
-<li>and the two axes: x/capacity, y/error.</li>
-</ul>
+<li>and the two axes: x/capacity, y/error.</li></ul></details>
 </div>
 </div>
 </div>
@@ -7721,7 +7725,9 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="heading_5">Qb A MSE-Epoch/Error Plot<a class="anchor-link" href="#Qb-A-MSE-Epoch/Error-Plot">¶</a></h3><p>Next, we look at a SGD model for fitting polynomial, that is <em>polynomial regression</em> similar to what Géron describes in [HOML] ("Polynomial Regression" + "Learning Curves").</p>
+<h3 id="heading_5">Qb A MSE-Epoch/Error Plot<a class="anchor-link" href="#Qb-A-MSE-Epoch/Error-Plot">¶</a></h3><details><summary>Description</summary>
+Next, we look at a SGD model for fitting polynomial, that is _polynomial regression_ similar to what Géron describes in [HOML] ("Polynomial Regression" + "Learning Curves"). 
+
 <p>Review the code below for plotting the RMSE vs. the iteration number or epoch below (three cells, part I/II/III).</p>
 <p>Write a short description of the code, and comment on the important points in the generation of the (R)MSE array.</p>
 <p>The training phase output lots of lines like</p>
@@ -7732,6 +7738,7 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 <p>What is an <em><strong>epoch</strong></em> and what is <code>mse_train</code> and <code>mse_val</code>?</p>
 <p>NOTE$_1$: the generalization plot figure 5.3 in [DL] (above) and the plots below have different x-axis, and are not to be compared directly!</p>
 <p>NOTE$_2$: notice that a 90 degree polynomial is used for the polynomial regression. This is just to produce a model with an extremly high capacity.</p>
+</details>
 </div>
 </div>
 </div>
@@ -7909,9 +7916,12 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="heading_6">Qc)  Early Stopping<a class="anchor-link" href="#Qc)--Early-Stopping">¶</a></h3><p>How would you implement <em><strong>early stopping</strong></em>, in the code above?</p>
+<h3 id="heading_6">Qc)  Early Stopping<a class="anchor-link" href="#Qc)--Early-Stopping">¶</a></h3><details><summary>Description</summary>
+How would you implement ___early stopping___, in the code above? 
+
 <p>Write an explanation of the early stopping concept...that is, just write some pseudo code that 'implements' the early stopping.</p>
 <p>OPTIONAL: also implement your early stopping pseudo code in Python, and get it to work with the code above (and not just flipping the hyperparameter to <code>early_stopping=True</code> on the <code>SGDRegressor</code>).</p>
+</details>
 </div>
 </div>
 </div>
@@ -7937,10 +7947,13 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="heading_7">Qd) Explain the Polynomial RMSE-Capacity plot<a class="anchor-link" href="#Qd)-Explain-the-Polynomial-RMSE-Capacity-plot">¶</a></h3><p>Now we revisit the concepts from <code>capacity_under_overfitting.ipynb</code> notebook and the polynomial fitting with a given capacity (polynomial degree).</p>
+<h3 id="heading_7">Qd) Explain the Polynomial RMSE-Capacity plot<a class="anchor-link" href="#Qd)-Explain-the-Polynomial-RMSE-Capacity-plot">¶</a></h3><details><summary>Description</summary>
+Now we revisit the concepts from `capacity_under_overfitting.ipynb` notebook and the polynomial fitting with a given capacity (polynomial degree).
+
 <p>Peek into the cell below (code similar to what we saw in <code>capacity_under_overfitting.ipynb</code>), and explain the generated RMSE-Capacity plot. Why does the <em>training error</em> keep dropping, while the <em>CV-error</em> drops until around capacity 3, and then begin to rise again?</p>
 <p>What does the x-axis <em>Capacity</em> and y-axis <em>RMSE</em> represent?</p>
 <p>Try increasing the model capacity. What happens when you do plots for <code>degrees</code> larger than around 10? Relate this with what you found via Qa+b in <code>capacity_under_overfitting.ipynb</code>.</p>
+</details>
 </div>
 </div>
 </div>
@@ -8040,33 +8053,6 @@ Traceback <span class="ansi-cyan-intense-fg ansi-bold">(most recent call last)</
 <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"TODO: ...answer in text form"</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>REVISIONS||
-:-|:-
-2018-12-19| CEF, initial.<br/>
-2018-02-14| CEF, major update and put in sync with under/overfitting exe.<br>
-2018-02-20| CEF, fixed revision table malformatting.
-2018-02-25| CEF, minor text updates, and made Qc optional.
-2018-02-25| CEF, updated code, made more functions.
-2018-03-11| CEF, corrected RSME to RMSE.
-2019-10-08| CEF, updated to ITMAL E19.
-2020-03-14| CEF, updated to ITMAL F20.
-2020-10-15| CEF, updated to ITMAL E20.
-2020-11-17| CEF, added comment on 90 degree polynomial, made early stopping a pseudo code exe.
-2021-03-22| CEF, changed crossref from "capacity_under_overfitting.ipynb Qc" to Qa+b in QdExplain the Polynomial RMSE-Capacity Plot.
-2021-03-23| CEF, changed 'cv RMSE' legend to 'validation RMSE'.
-2021-10-31| CEF, updated to ITMAL E21.
-2022-03-25| CEF, updated to SWMAL F22.
-2023-03-16| CEF, minor update to SWMAL F23.</br></p>
 </div>
 </div>
 </div>
