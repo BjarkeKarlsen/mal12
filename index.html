@@ -14754,17 +14754,117 @@ Now, replace the `svm.SVC` model with an `SGDClassifier` and a suitable set of t
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: grid search</span>
-<span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"TODO: make a grid search on the SDG classifier.."</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
+<span class="c1"># https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html</span>
+
+<span class="c1"># Setup data</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">LoadAndSetupData</span><span class="p">(</span>
+    <span class="s1">'iris'</span><span class="p">)</span>  <span class="c1"># 'iris', 'moon', or 'mnist'</span>
+
+<span class="c1"># Setup search parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s1">'hinge'</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>  
+
+<span class="n">tuning_parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">#'kernel': ('linear', 'rbf'), </span>
+    <span class="c1">#'C': [0.1, 1, 10],</span>
+    <span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s1">'max_iter'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">],</span>
+    <span class="s1">'penalty'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'l1'</span><span class="p">,</span> <span class="s1">'l2'</span><span class="p">]</span>
+    <span class="c1">#'learning_rate': ['optimal','constant']   </span>
+<span class="p">}</span>
+
+<span class="n">CV</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">VERBOSE</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Run GridSearchCV for the model</span>
+<span class="n">grid_tuned</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                          <span class="n">tuning_parameters</span><span class="p">,</span>
+                          <span class="n">cv</span><span class="o">=</span><span class="n">CV</span><span class="p">,</span>
+                          <span class="n">scoring</span><span class="o">=</span><span class="s1">'f1_micro'</span><span class="p">,</span>
+                          <span class="n">verbose</span><span class="o">=</span><span class="n">VERBOSE</span><span class="p">,</span>
+                          <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">grid_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+<span class="c1"># Report result</span>
+<span class="n">b0</span><span class="p">,</span> <span class="n">m0</span> <span class="o">=</span> <span class="n">FullReport</span><span class="p">(</span><span class="n">grid_tuned</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'OK(grid-search)'</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>DATA: iris..
+  org. data:  X.shape      =(  150;    4), y.shape      =(  150)
+  train data: X_train.shape=(  105;    4), y_train.shape=(  105)
+  test data:  X_test.shape =(   45;    4), y_test.shape =(   45)
+
+SEARCH TIME: 0.11 sec
+
+Best model set found on train set:
+
+	best parameters={'alpha': 0.01, 'max_iter': 1000, 'penalty': 'l1'}
+	best 'f1_micro' score=0.9619047619047618
+	best index=8
+
+Best estimator CTOR:
+	SGDClassifier(alpha=0.01, penalty='l1', random_state=42)
+
+Grid scores ('f1_micro') on development set:
+	[ 0]: 0.819 (+/-0.304) for {'alpha': 0.0001, 'max_iter': 1000, 'penalty': 'l1'}
+	[ 1]: 0.895 (+/-0.111) for {'alpha': 0.0001, 'max_iter': 1000, 'penalty': 'l2'}
+	[ 2]: 0.819 (+/-0.304) for {'alpha': 0.0001, 'max_iter': 2000, 'penalty': 'l1'}
+	[ 3]: 0.895 (+/-0.111) for {'alpha': 0.0001, 'max_iter': 2000, 'penalty': 'l2'}
+	[ 4]: 0.943 (+/-0.071) for {'alpha': 0.001, 'max_iter': 1000, 'penalty': 'l1'}
+	[ 5]: 0.924 (+/-0.076) for {'alpha': 0.001, 'max_iter': 1000, 'penalty': 'l2'}
+	[ 6]: 0.943 (+/-0.071) for {'alpha': 0.001, 'max_iter': 2000, 'penalty': 'l1'}
+	[ 7]: 0.924 (+/-0.076) for {'alpha': 0.001, 'max_iter': 2000, 'penalty': 'l2'}
+	[ 8]: 0.962 (+/-0.038) for {'alpha': 0.01, 'max_iter': 1000, 'penalty': 'l1'}
+	[ 9]: 0.886 (+/-0.076) for {'alpha': 0.01, 'max_iter': 1000, 'penalty': 'l2'}
+	[10]: 0.962 (+/-0.038) for {'alpha': 0.01, 'max_iter': 2000, 'penalty': 'l1'}
+	[11]: 0.886 (+/-0.076) for {'alpha': 0.01, 'max_iter': 2000, 'penalty': 'l2'}
+
+Detailed classification report:
+	The model is trained on the full development set.
+	The scores are computed on the full evaluation set.
+
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        16
+           1       1.00      0.83      0.91        18
+           2       0.79      1.00      0.88        11
+
+    accuracy                           0.93        45
+   macro avg       0.93      0.94      0.93        45
+weighted avg       0.95      0.93      0.93        45
+
+
+CTOR for best model: SGDClassifier(alpha=0.01, penalty='l1', random_state=42)
+
+best: dat=iris, score=0.96190, model=SGDClassifier(alpha=0.01,max_iter=1000,penalty='l1')
+
+OK(grid-search)
+</pre>
 </div>
 </div>
 </div>
@@ -14803,17 +14903,114 @@ Now, add code to run a `RandomizedSearchCV` instead.
 </details></details></div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># TODO:</span>
-<span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"implement a random search for the SGD classifier.."</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+
+<span class="c1"># Setup data</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">LoadAndSetupData</span><span class="p">(</span>
+    <span class="s1">'iris'</span><span class="p">)</span>  <span class="c1"># 'iris', 'moon', or 'mnist'</span>
+
+<span class="c1"># Setup search parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s1">'hinge'</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>  
+
+<span class="n">tuning_parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">#'kernel': ('linear', 'rbf'), </span>
+    <span class="c1">#'C': [0.1, 1, 10],</span>
+    <span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s1">'max_iter'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">],</span>
+    <span class="s1">'penalty'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'l1'</span><span class="p">,</span> <span class="s1">'l2'</span><span class="p">]</span>
+    <span class="c1">#'learning_rate': ['optimal','constant']   </span>
+<span class="p">}</span>
+
+<span class="n">CV</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">VERBOSE</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Run GridSearchCV for the model</span>
+<span class="n">grid_tuned</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                          <span class="n">tuning_parameters</span><span class="p">,</span>
+                          <span class="n">cv</span><span class="o">=</span><span class="n">CV</span><span class="p">,</span>
+                          <span class="n">scoring</span><span class="o">=</span><span class="s1">'f1_micro'</span><span class="p">,</span>
+                          <span class="n">verbose</span><span class="o">=</span><span class="n">VERBOSE</span><span class="p">,</span>
+                          <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">grid_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+<span class="c1"># Report result</span>
+<span class="n">b0</span><span class="p">,</span> <span class="n">m0</span> <span class="o">=</span> <span class="n">FullReport</span><span class="p">(</span><span class="n">grid_tuned</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'OK(grid-search)'</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>DATA: iris..
+  org. data:  X.shape      =(  150;    4), y.shape      =(  150)
+  train data: X_train.shape=(  105;    4), y_train.shape=(  105)
+  test data:  X_test.shape =(   45;    4), y_test.shape =(   45)
+
+SEARCH TIME: 0.10 sec
+
+Best model set found on train set:
+
+	best parameters={'penalty': 'l1', 'max_iter': 2000, 'alpha': 0.01}
+	best 'f1_micro' score=0.9619047619047618
+	best index=1
+
+Best estimator CTOR:
+	SGDClassifier(alpha=0.01, max_iter=2000, penalty='l1', random_state=42)
+
+Grid scores ('f1_micro') on development set:
+	[ 0]: 0.886 (+/-0.076) for {'penalty': 'l2', 'max_iter': 1000, 'alpha': 0.01}
+	[ 1]: 0.962 (+/-0.038) for {'penalty': 'l1', 'max_iter': 2000, 'alpha': 0.01}
+	[ 2]: 0.943 (+/-0.071) for {'penalty': 'l1', 'max_iter': 1000, 'alpha': 0.001}
+	[ 3]: 0.943 (+/-0.071) for {'penalty': 'l1', 'max_iter': 2000, 'alpha': 0.001}
+	[ 4]: 0.924 (+/-0.076) for {'penalty': 'l2', 'max_iter': 1000, 'alpha': 0.001}
+	[ 5]: 0.819 (+/-0.304) for {'penalty': 'l1', 'max_iter': 2000, 'alpha': 0.0001}
+	[ 6]: 0.924 (+/-0.076) for {'penalty': 'l2', 'max_iter': 2000, 'alpha': 0.001}
+	[ 7]: 0.895 (+/-0.111) for {'penalty': 'l2', 'max_iter': 2000, 'alpha': 0.0001}
+	[ 8]: 0.895 (+/-0.111) for {'penalty': 'l2', 'max_iter': 1000, 'alpha': 0.0001}
+	[ 9]: 0.962 (+/-0.038) for {'penalty': 'l1', 'max_iter': 1000, 'alpha': 0.01}
+
+Detailed classification report:
+	The model is trained on the full development set.
+	The scores are computed on the full evaluation set.
+
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        16
+           1       1.00      0.83      0.91        18
+           2       0.79      1.00      0.88        11
+
+    accuracy                           0.93        45
+   macro avg       0.93      0.94      0.93        45
+weighted avg       0.95      0.93      0.93        45
+
+
+CTOR for best model: SGDClassifier(alpha=0.01, max_iter=2000, penalty='l1', random_state=42)
+
+best: dat=iris, score=0.96190, model=SGDClassifier(alpha=0.01,max_iter=2000,penalty='l1')
+
+OK(grid-search)
+</pre>
 </div>
 </div>
 </div>
@@ -14870,17 +15067,191 @@ Grp09: CTOR for best model: SGDClassifier(alpha=1.0, average=False, class_weight
 </details></details></div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># TODO:(in code and text..)</span>
-<span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"participate in the Search Quest---remember to publish your result(s) on Brightspace."</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+
+<span class="c1"># Setup data</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">LoadAndSetupData</span><span class="p">(</span>
+    <span class="s1">'mnist'</span><span class="p">)</span>  <span class="c1"># 'iris', 'moon', or 'mnist'</span>
+
+<span class="c1"># Setup search parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s1">'hinge'</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>  
+
+<span class="n">tuning_parameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">#'kernel': ('linear', 'rbf'), </span>
+    <span class="c1">#'C': [0.1, 1, 10],</span>
+    <span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s1">'max_iter'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">],</span>
+    <span class="s1">'penalty'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'l1'</span><span class="p">,</span> <span class="s1">'l2'</span><span class="p">]</span>
+    <span class="c1">#'learning_rate': ['optimal','constant']   </span>
+<span class="p">}</span>
+
+<span class="n">CV</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">VERBOSE</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Run GridSearchCV for the model</span>
+<span class="n">grid_tuned</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                          <span class="n">tuning_parameters</span><span class="p">,</span>
+                          <span class="n">cv</span><span class="o">=</span><span class="n">CV</span><span class="p">,</span>
+                          <span class="n">scoring</span><span class="o">=</span><span class="s1">'f1_micro'</span><span class="p">,</span>
+                          <span class="n">verbose</span><span class="o">=</span><span class="n">VERBOSE</span><span class="p">,</span>
+                          <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">grid_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+<span class="c1"># Report result</span>
+<span class="n">b0</span><span class="p">,</span> <span class="n">m0</span> <span class="o">=</span> <span class="n">FullReport</span><span class="p">(</span><span class="n">grid_tuned</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'OK(grid-search)'</span><span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>DATA: mnist..
+Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
+11490434/11490434 [==============================] - 1s 0us/step
+  org. data:  X.shape      =(70000;  784), y.shape      =(70000)
+  train data: X_train.shape=(49000;  784), y_train.shape=(49000)
+  test data:  X_test.shape =(21000;  784), y_test.shape =(21000)
+
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\mal12\L09\gridsearch.ipynb Cell 9</span> line <span class="ansi-cyan-fg">3
+</span><span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=25'&gt;26&lt;/a&gt;</span> grid_tuned = RandomizedSearchCV(model,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=26'&gt;27&lt;/a&gt;</span>                           tuning_parameters,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=27'&gt;28&lt;/a&gt;</span>                           cv=CV,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=28'&gt;29&lt;/a&gt;</span>                           scoring='f1_micro',
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=29'&gt;30&lt;/a&gt;</span>                           verbose=VERBOSE,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=30'&gt;31&lt;/a&gt;</span>                           n_jobs=-1)
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=32'&gt;33&lt;/a&gt;</span> start = time()
+<span class="ansi-green-intense-fg ansi-bold">---&gt; &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=33'&gt;34&lt;/a&gt;</span> grid_tuned.fit(X_train, y_train)
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=34'&gt;35&lt;/a&gt;</span> t = time() - start
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#X11sZmlsZQ%3D%3D?line=36'&gt;37&lt;/a&gt;</span> # Report result
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\base.py:1152</span>, in <span class="ansi-cyan-fg">_fit_context.&lt;locals&gt;.decorator.&lt;locals&gt;.wrapper</span><span class="ansi-blue-intense-fg ansi-bold">(estimator, *args, **kwargs)</span>
+<span class="ansi-green-fg">   1145</span>     estimator._validate_params()
+<span class="ansi-green-fg">   1147</span> with config_context(
+<span class="ansi-green-fg">   1148</span>     skip_parameter_validation=(
+<span class="ansi-green-fg">   1149</span>         prefer_skip_nested_validation or global_skip_validation
+<span class="ansi-green-fg">   1150</span>     )
+<span class="ansi-green-fg">   1151</span> ):
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1152</span>     return fit_method(estimator, *args, **kwargs)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_search.py:898</span>, in <span class="ansi-cyan-fg">BaseSearchCV.fit</span><span class="ansi-blue-intense-fg ansi-bold">(self, X, y, groups, **fit_params)</span>
+<span class="ansi-green-fg">    892</span>     results = self._format_results(
+<span class="ansi-green-fg">    893</span>         all_candidate_params, n_splits, all_out, all_more_results
+<span class="ansi-green-fg">    894</span>     )
+<span class="ansi-green-fg">    896</span>     return results
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 898</span> self._run_search(evaluate_candidates)
+<span class="ansi-green-fg">    900</span> # multimetric is determined here because in the case of a callable
+<span class="ansi-green-fg">    901</span> # self.scoring the return type is only known after calling
+<span class="ansi-green-fg">    902</span> first_test_score = all_out[0]["test_scores"]
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_search.py:1809</span>, in <span class="ansi-cyan-fg">RandomizedSearchCV._run_search</span><span class="ansi-blue-intense-fg ansi-bold">(self, evaluate_candidates)</span>
+<span class="ansi-green-fg">   1807</span> def _run_search(self, evaluate_candidates):
+<span class="ansi-green-fg">   1808</span>     """Search n_iter candidates from param_distributions"""
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1809</span>     evaluate_candidates(
+<span class="ansi-green-fg">   1810</span>         ParameterSampler(
+<span class="ansi-green-fg">   1811</span>             self.param_distributions, self.n_iter, random_state=self.random_state
+<span class="ansi-green-fg">   1812</span>         )
+<span class="ansi-green-fg">   1813</span>     )
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_search.py:845</span>, in <span class="ansi-cyan-fg">BaseSearchCV.fit.&lt;locals&gt;.evaluate_candidates</span><span class="ansi-blue-intense-fg ansi-bold">(candidate_params, cv, more_results)</span>
+<span class="ansi-green-fg">    837</span> if self.verbose &gt; 0:
+<span class="ansi-green-fg">    838</span>     print(
+<span class="ansi-green-fg">    839</span>         "Fitting {0} folds for each of {1} candidates,"
+<span class="ansi-green-fg">    840</span>         " totalling {2} fits".format(
+<span class="ansi-green-fg">    841</span>             n_splits, n_candidates, n_candidates * n_splits
+<span class="ansi-green-fg">    842</span>         )
+<span class="ansi-green-fg">    843</span>     )
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 845</span> out = parallel(
+<span class="ansi-green-fg">    846</span>     delayed(_fit_and_score)(
+<span class="ansi-green-fg">    847</span>         clone(base_estimator),
+<span class="ansi-green-fg">    848</span>         X,
+<span class="ansi-green-fg">    849</span>         y,
+<span class="ansi-green-fg">    850</span>         train=train,
+<span class="ansi-green-fg">    851</span>         test=test,
+<span class="ansi-green-fg">    852</span>         parameters=parameters,
+<span class="ansi-green-fg">    853</span>         split_progress=(split_idx, n_splits),
+<span class="ansi-green-fg">    854</span>         candidate_progress=(cand_idx, n_candidates),
+<span class="ansi-green-fg">    855</span>         **fit_and_score_kwargs,
+<span class="ansi-green-fg">    856</span>     )
+<span class="ansi-green-fg">    857</span>     for (cand_idx, parameters), (split_idx, (train, test)) in product(
+<span class="ansi-green-fg">    858</span>         enumerate(candidate_params), enumerate(cv.split(X, y, groups))
+<span class="ansi-green-fg">    859</span>     )
+<span class="ansi-green-fg">    860</span> )
+<span class="ansi-green-fg">    862</span> if len(out) &lt; 1:
+<span class="ansi-green-fg">    863</span>     raise ValueError(
+<span class="ansi-green-fg">    864</span>         "No fits were performed. "
+<span class="ansi-green-fg">    865</span>         "Was the CV iterator empty? "
+<span class="ansi-green-fg">    866</span>         "Were there no candidates?"
+<span class="ansi-green-fg">    867</span>     )
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\utils\parallel.py:65</span>, in <span class="ansi-cyan-fg">Parallel.__call__</span><span class="ansi-blue-intense-fg ansi-bold">(self, iterable)</span>
+<span class="ansi-green-fg">     60</span> config = get_config()
+<span class="ansi-green-fg">     61</span> iterable_with_config = (
+<span class="ansi-green-fg">     62</span>     (_with_config(delayed_func, config), args, kwargs)
+<span class="ansi-green-fg">     63</span>     for delayed_func, args, kwargs in iterable
+<span class="ansi-green-fg">     64</span> )
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 65</span> return super().__call__(iterable_with_config)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1952</span>, in <span class="ansi-cyan-fg">Parallel.__call__</span><span class="ansi-blue-intense-fg ansi-bold">(self, iterable)</span>
+<span class="ansi-green-fg">   1946</span> # The first item from the output is blank, but it makes the interpreter
+<span class="ansi-green-fg">   1947</span> # progress until it enters the Try/Except block of the generator and
+<span class="ansi-green-fg">   1948</span> # reach the first `yield` statement. This starts the aynchronous
+<span class="ansi-green-fg">   1949</span> # dispatch of the tasks to the workers.
+<span class="ansi-green-fg">   1950</span> next(output)
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1952</span> return output if self.return_generator else list(output)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1595</span>, in <span class="ansi-cyan-fg">Parallel._get_outputs</span><span class="ansi-blue-intense-fg ansi-bold">(self, iterator, pre_dispatch)</span>
+<span class="ansi-green-fg">   1592</span>     yield
+<span class="ansi-green-fg">   1594</span>     with self._backend.retrieval_context():
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1595</span>         yield from self._retrieve()
+<span class="ansi-green-fg">   1597</span> except GeneratorExit:
+<span class="ansi-green-fg">   1598</span>     # The generator has been garbage collected before being fully
+<span class="ansi-green-fg">   1599</span>     # consumed. This aborts the remaining tasks if possible and warn
+<span class="ansi-green-fg">   1600</span>     # the user if necessary.
+<span class="ansi-green-fg">   1601</span>     self._exception = True
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1707</span>, in <span class="ansi-cyan-fg">Parallel._retrieve</span><span class="ansi-blue-intense-fg ansi-bold">(self)</span>
+<span class="ansi-green-fg">   1702</span> # If the next job is not ready for retrieval yet, we just wait for
+<span class="ansi-green-fg">   1703</span> # async callbacks to progress.
+<span class="ansi-green-fg">   1704</span> if ((len(self._jobs) == 0) or
+<span class="ansi-green-fg">   1705</span>     (self._jobs[0].get_status(
+<span class="ansi-green-fg">   1706</span>         timeout=self.timeout) == TASK_PENDING)):
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1707</span>     time.sleep(0.01)
+<span class="ansi-green-fg">   1708</span>     continue
+<span class="ansi-green-fg">   1710</span> # We need to be careful: the job list can be filling up as
+<span class="ansi-green-fg">   1711</span> # we empty it and Python list are not thread-safe by
+<span class="ansi-green-fg">   1712</span> # default hence the use of the lock
+
+<span class="ansi-red-intense-fg ansi-bold">KeyboardInterrupt</span>: </pre>
 </div>
 </div>
 </div>
