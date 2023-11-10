@@ -9738,7 +9738,7 @@ There are two code cells below: 1) function setup, 2) the actual grid-search.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
@@ -9910,7 +9910,7 @@ There are two code cells below: 1) function setup, 2) the actual grid-search.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Setup data</span>
@@ -9963,7 +9963,7 @@ There are two code cells below: 1) function setup, 2) the actual grid-search.
   train data: X_train.shape=(  105;    4), y_train.shape=(  105)
   test data:  X_test.shape =(   45;    4), y_test.shape =(   45)
 
-SEARCH TIME: 2.60 sec
+SEARCH TIME: 2.68 sec
 
 Best model set found on train set:
 
@@ -10020,6 +10020,7 @@ Now, replace the `svm.SVC` model with an `SGDClassifier` and a suitable set of t
 <p>You need at least four or five different hyperparameters from the <code>SGDClassifier</code> in the search-space before it begins to take considerable compute time doing the full grid search.</p>
 <p>So, repeat the search with the <code>SGDClassifier</code>, and be sure to add enough hyperparameters to the grid-search, such that the search takes a considerable time to run, that is a couple of minutes or up to some hours..</p>
 </details>
+<p>We have now replaced the <code>svm.SVC</code> model with an <code>SGDClassifier</code> and changed the hyperparameter for the model.</p>
 </div>
 </div>
 </div>
@@ -10028,7 +10029,7 @@ Now, replace the `svm.SVC` model with an `SGDClassifier` and a suitable set of t
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
@@ -10044,9 +10045,11 @@ Now, replace the `svm.SVC` model with an `SGDClassifier` and a suitable set of t
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>  
 
+<span class="c1"># ['average', 'class_weight', 'early_stopping', 'epsilon', 'eta0', 'fit_intercept', 'l1_ratio', 'learning_rate', 'loss', 'max_iter', 'n_iter_no_change', 'n_jobs', 'penalty', 'power_t', 'random_state', 'shuffle', 'tol', 'validation_fraction', 'verbose', 'warm_start']</span>
+
 <span class="n">tuning_parameters</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="c1">#'kernel': ('linear', 'rbf'), </span>
-    <span class="c1">#'C': [0.1, 1, 10],</span>
+    <span class="s1">'loss'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'hinge'</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">,</span> <span class="s1">'modified_huber'</span><span class="p">,</span> <span class="s1">'squared_hinge'</span><span class="p">,</span>  <span class="s1">'perceptron'</span><span class="p">],</span>
+    <span class="s1">'max_iter'</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
     <span class="s1">'alpha'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
     <span class="s1">'max_iter'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">],</span>
     <span class="s1">'penalty'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'l1'</span><span class="p">,</span> <span class="s1">'l2'</span><span class="p">]</span>
@@ -10088,52 +10091,175 @@ Now, replace the `svm.SVC` model with an `SGDClassifier` and a suitable set of t
   train data: X_train.shape=(  105;    4), y_train.shape=(  105)
   test data:  X_test.shape =(   45;    4), y_test.shape =(   45)
 
-SEARCH TIME: 0.11 sec
-
-Best model set found on train set:
-
-	best parameters={'alpha': 0.01, 'max_iter': 1000, 'penalty': 'l1'}
-	best 'f1_micro' score=0.9619047619047618
-	best index=8
-
-Best estimator CTOR:
-	SGDClassifier(alpha=0.01, penalty='l1', random_state=42)
-
-Grid scores ('f1_micro') on development set:
-	[ 0]: 0.819 (+/-0.304) for {'alpha': 0.0001, 'max_iter': 1000, 'penalty': 'l1'}
-	[ 1]: 0.895 (+/-0.111) for {'alpha': 0.0001, 'max_iter': 1000, 'penalty': 'l2'}
-	[ 2]: 0.819 (+/-0.304) for {'alpha': 0.0001, 'max_iter': 2000, 'penalty': 'l1'}
-	[ 3]: 0.895 (+/-0.111) for {'alpha': 0.0001, 'max_iter': 2000, 'penalty': 'l2'}
-	[ 4]: 0.943 (+/-0.071) for {'alpha': 0.001, 'max_iter': 1000, 'penalty': 'l1'}
-	[ 5]: 0.924 (+/-0.076) for {'alpha': 0.001, 'max_iter': 1000, 'penalty': 'l2'}
-	[ 6]: 0.943 (+/-0.071) for {'alpha': 0.001, 'max_iter': 2000, 'penalty': 'l1'}
-	[ 7]: 0.924 (+/-0.076) for {'alpha': 0.001, 'max_iter': 2000, 'penalty': 'l2'}
-	[ 8]: 0.962 (+/-0.038) for {'alpha': 0.01, 'max_iter': 1000, 'penalty': 'l1'}
-	[ 9]: 0.886 (+/-0.076) for {'alpha': 0.01, 'max_iter': 1000, 'penalty': 'l2'}
-	[10]: 0.962 (+/-0.038) for {'alpha': 0.01, 'max_iter': 2000, 'penalty': 'l1'}
-	[11]: 0.886 (+/-0.076) for {'alpha': 0.01, 'max_iter': 2000, 'penalty': 'l2'}
-
-Detailed classification report:
-	The model is trained on the full development set.
-	The scores are computed on the full evaluation set.
-
-              precision    recall  f1-score   support
-
-           0       1.00      1.00      1.00        16
-           1       1.00      0.83      0.91        18
-           2       0.79      1.00      0.88        11
-
-    accuracy                           0.93        45
-   macro avg       0.93      0.94      0.93        45
-weighted avg       0.95      0.93      0.93        45
-
-
-CTOR for best model: SGDClassifier(alpha=0.01, penalty='l1', random_state=42)
-
-best: dat=iris, score=0.96190, model=SGDClassifier(alpha=0.01,max_iter=1000,penalty='l1')
-
-OK(grid-search)
 </pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">_RemoteTraceback</span>                          Traceback (most recent call last)
+<span class="ansi-red-intense-fg ansi-bold">_RemoteTraceback</span>: 
+"""
+Traceback (most recent call last):
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\externals\loky\process_executor.py", line 463, in _process_worker
+    r = call_item()
+        ^^^^^^^^^^^
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\externals\loky\process_executor.py", line 291, in __call__
+    return self.fn(*self.args, **self.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py", line 589, in __call__
+    return [func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py", line 589, in &lt;listcomp&gt;
+    return [func(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\utils\parallel.py", line 127, in __call__
+    return self.function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_validation.py", line 717, in _fit_and_score
+    estimator = estimator.set_params(**clone(parameters, safe=False))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\base.py", line 230, in set_params
+    raise ValueError(
+ValueError: Invalid parameter 'kernel' for estimator SGDClassifier(random_state=42). Valid parameters are: ['alpha', 'average', 'class_weight', 'early_stopping', 'epsilon', 'eta0', 'fit_intercept', 'l1_ratio', 'learning_rate', 'loss', 'max_iter', 'n_iter_no_change', 'n_jobs', 'penalty', 'power_t', 'random_state', 'shuffle', 'tol', 'validation_fraction', 'verbose', 'warm_start'].
+"""
+
+The above exception was the direct cause of the following exception:
+
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\mal12\L09\gridsearch.ipynb Cell 5</span> line <span class="ansi-cyan-fg">3
+</span><span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=26'&gt;27&lt;/a&gt;</span> grid_tuned = GridSearchCV(model,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=27'&gt;28&lt;/a&gt;</span>                           tuning_parameters,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=28'&gt;29&lt;/a&gt;</span>                           cv=CV,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=29'&gt;30&lt;/a&gt;</span>                           scoring='f1_micro',
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=30'&gt;31&lt;/a&gt;</span>                           verbose=VERBOSE,
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=31'&gt;32&lt;/a&gt;</span>                           n_jobs=-1)
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=33'&gt;34&lt;/a&gt;</span> start = time()
+<span class="ansi-green-intense-fg ansi-bold">---&gt; &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=34'&gt;35&lt;/a&gt;</span> grid_tuned.fit(X_train, y_train)
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=35'&gt;36&lt;/a&gt;</span> t = time() - start
+<span class="ansi-green-fg">     &lt;a href='vscode-notebook-cell:/c%3A/Users/Bjark/source/repos/MAL/mal12/L09/gridsearch.ipynb#W4sZmlsZQ%3D%3D?line=37'&gt;38&lt;/a&gt;</span> # Report result
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\base.py:1152</span>, in <span class="ansi-cyan-fg">_fit_context.&lt;locals&gt;.decorator.&lt;locals&gt;.wrapper</span><span class="ansi-blue-intense-fg ansi-bold">(estimator, *args, **kwargs)</span>
+<span class="ansi-green-fg">   1145</span>     estimator._validate_params()
+<span class="ansi-green-fg">   1147</span> with config_context(
+<span class="ansi-green-fg">   1148</span>     skip_parameter_validation=(
+<span class="ansi-green-fg">   1149</span>         prefer_skip_nested_validation or global_skip_validation
+<span class="ansi-green-fg">   1150</span>     )
+<span class="ansi-green-fg">   1151</span> ):
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1152</span>     return fit_method(estimator, *args, **kwargs)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_search.py:898</span>, in <span class="ansi-cyan-fg">BaseSearchCV.fit</span><span class="ansi-blue-intense-fg ansi-bold">(self, X, y, groups, **fit_params)</span>
+<span class="ansi-green-fg">    892</span>     results = self._format_results(
+<span class="ansi-green-fg">    893</span>         all_candidate_params, n_splits, all_out, all_more_results
+<span class="ansi-green-fg">    894</span>     )
+<span class="ansi-green-fg">    896</span>     return results
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 898</span> self._run_search(evaluate_candidates)
+<span class="ansi-green-fg">    900</span> # multimetric is determined here because in the case of a callable
+<span class="ansi-green-fg">    901</span> # self.scoring the return type is only known after calling
+<span class="ansi-green-fg">    902</span> first_test_score = all_out[0]["test_scores"]
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_search.py:1422</span>, in <span class="ansi-cyan-fg">GridSearchCV._run_search</span><span class="ansi-blue-intense-fg ansi-bold">(self, evaluate_candidates)</span>
+<span class="ansi-green-fg">   1420</span> def _run_search(self, evaluate_candidates):
+<span class="ansi-green-fg">   1421</span>     """Search all candidates in param_grid"""
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1422</span>     evaluate_candidates(ParameterGrid(self.param_grid))
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\model_selection\_search.py:845</span>, in <span class="ansi-cyan-fg">BaseSearchCV.fit.&lt;locals&gt;.evaluate_candidates</span><span class="ansi-blue-intense-fg ansi-bold">(candidate_params, cv, more_results)</span>
+<span class="ansi-green-fg">    837</span> if self.verbose &gt; 0:
+<span class="ansi-green-fg">    838</span>     print(
+<span class="ansi-green-fg">    839</span>         "Fitting {0} folds for each of {1} candidates,"
+<span class="ansi-green-fg">    840</span>         " totalling {2} fits".format(
+<span class="ansi-green-fg">    841</span>             n_splits, n_candidates, n_candidates * n_splits
+<span class="ansi-green-fg">    842</span>         )
+<span class="ansi-green-fg">    843</span>     )
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 845</span> out = parallel(
+<span class="ansi-green-fg">    846</span>     delayed(_fit_and_score)(
+<span class="ansi-green-fg">    847</span>         clone(base_estimator),
+<span class="ansi-green-fg">    848</span>         X,
+<span class="ansi-green-fg">    849</span>         y,
+<span class="ansi-green-fg">    850</span>         train=train,
+<span class="ansi-green-fg">    851</span>         test=test,
+<span class="ansi-green-fg">    852</span>         parameters=parameters,
+<span class="ansi-green-fg">    853</span>         split_progress=(split_idx, n_splits),
+<span class="ansi-green-fg">    854</span>         candidate_progress=(cand_idx, n_candidates),
+<span class="ansi-green-fg">    855</span>         **fit_and_score_kwargs,
+<span class="ansi-green-fg">    856</span>     )
+<span class="ansi-green-fg">    857</span>     for (cand_idx, parameters), (split_idx, (train, test)) in product(
+<span class="ansi-green-fg">    858</span>         enumerate(candidate_params), enumerate(cv.split(X, y, groups))
+<span class="ansi-green-fg">    859</span>     )
+<span class="ansi-green-fg">    860</span> )
+<span class="ansi-green-fg">    862</span> if len(out) &lt; 1:
+<span class="ansi-green-fg">    863</span>     raise ValueError(
+<span class="ansi-green-fg">    864</span>         "No fits were performed. "
+<span class="ansi-green-fg">    865</span>         "Was the CV iterator empty? "
+<span class="ansi-green-fg">    866</span>         "Were there no candidates?"
+<span class="ansi-green-fg">    867</span>     )
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\sklearn\utils\parallel.py:65</span>, in <span class="ansi-cyan-fg">Parallel.__call__</span><span class="ansi-blue-intense-fg ansi-bold">(self, iterable)</span>
+<span class="ansi-green-fg">     60</span> config = get_config()
+<span class="ansi-green-fg">     61</span> iterable_with_config = (
+<span class="ansi-green-fg">     62</span>     (_with_config(delayed_func, config), args, kwargs)
+<span class="ansi-green-fg">     63</span>     for delayed_func, args, kwargs in iterable
+<span class="ansi-green-fg">     64</span> )
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 65</span> return super().__call__(iterable_with_config)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1952</span>, in <span class="ansi-cyan-fg">Parallel.__call__</span><span class="ansi-blue-intense-fg ansi-bold">(self, iterable)</span>
+<span class="ansi-green-fg">   1946</span> # The first item from the output is blank, but it makes the interpreter
+<span class="ansi-green-fg">   1947</span> # progress until it enters the Try/Except block of the generator and
+<span class="ansi-green-fg">   1948</span> # reach the first `yield` statement. This starts the aynchronous
+<span class="ansi-green-fg">   1949</span> # dispatch of the tasks to the workers.
+<span class="ansi-green-fg">   1950</span> next(output)
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1952</span> return output if self.return_generator else list(output)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1595</span>, in <span class="ansi-cyan-fg">Parallel._get_outputs</span><span class="ansi-blue-intense-fg ansi-bold">(self, iterator, pre_dispatch)</span>
+<span class="ansi-green-fg">   1592</span>     yield
+<span class="ansi-green-fg">   1594</span>     with self._backend.retrieval_context():
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1595</span>         yield from self._retrieve()
+<span class="ansi-green-fg">   1597</span> except GeneratorExit:
+<span class="ansi-green-fg">   1598</span>     # The generator has been garbage collected before being fully
+<span class="ansi-green-fg">   1599</span>     # consumed. This aborts the remaining tasks if possible and warn
+<span class="ansi-green-fg">   1600</span>     # the user if necessary.
+<span class="ansi-green-fg">   1601</span>     self._exception = True
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1699</span>, in <span class="ansi-cyan-fg">Parallel._retrieve</span><span class="ansi-blue-intense-fg ansi-bold">(self)</span>
+<span class="ansi-green-fg">   1692</span> while self._wait_retrieval():
+<span class="ansi-green-fg">   1693</span> 
+<span class="ansi-green-fg">   1694</span>     # If the callback thread of a worker has signaled that its task
+<span class="ansi-green-fg">   1695</span>     # triggered an exception, or if the retrieval loop has raised an
+<span class="ansi-green-fg">   1696</span>     # exception (e.g. `GeneratorExit`), exit the loop and surface the
+<span class="ansi-green-fg">   1697</span>     # worker traceback.
+<span class="ansi-green-fg">   1698</span>     if self._aborting:
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1699</span>         self._raise_error_fast()
+<span class="ansi-green-fg">   1700</span>         break
+<span class="ansi-green-fg">   1702</span>     # If the next job is not ready for retrieval yet, we just wait for
+<span class="ansi-green-fg">   1703</span>     # async callbacks to progress.
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:1734</span>, in <span class="ansi-cyan-fg">Parallel._raise_error_fast</span><span class="ansi-blue-intense-fg ansi-bold">(self)</span>
+<span class="ansi-green-fg">   1730</span> # If this error job exists, immediatly raise the error by
+<span class="ansi-green-fg">   1731</span> # calling get_result. This job might not exists if abort has been
+<span class="ansi-green-fg">   1732</span> # called directly or if the generator is gc'ed.
+<span class="ansi-green-fg">   1733</span> if error_job is not None:
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1734</span>     error_job.get_result(self.timeout)
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:736</span>, in <span class="ansi-cyan-fg">BatchCompletionCallBack.get_result</span><span class="ansi-blue-intense-fg ansi-bold">(self, timeout)</span>
+<span class="ansi-green-fg">    730</span> backend = self.parallel._backend
+<span class="ansi-green-fg">    732</span> if backend.supports_retrieve_callback:
+<span class="ansi-green-fg">    733</span>     # We assume that the result has already been retrieved by the
+<span class="ansi-green-fg">    734</span>     # callback thread, and is stored internally. It's just waiting to
+<span class="ansi-green-fg">    735</span>     # be returned.
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 736</span>     return self._return_or_raise()
+<span class="ansi-green-fg">    738</span> # For other backends, the main thread needs to run the retrieval step.
+<span class="ansi-green-fg">    739</span> try:
+
+File <span class="ansi-green-intense-fg ansi-bold">c:\Users\Bjark\source\repos\MAL\MAL_V11\Lib\site-packages\joblib\parallel.py:754</span>, in <span class="ansi-cyan-fg">BatchCompletionCallBack._return_or_raise</span><span class="ansi-blue-intense-fg ansi-bold">(self)</span>
+<span class="ansi-green-fg">    752</span> try:
+<span class="ansi-green-fg">    753</span>     if self.status == TASK_ERROR:
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 754</span>         raise self._result
+<span class="ansi-green-fg">    755</span>     return self._result
+<span class="ansi-green-fg">    756</span> finally:
+
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>: Invalid parameter 'kernel' for estimator SGDClassifier(random_state=42). Valid parameters are: ['alpha', 'average', 'class_weight', 'early_stopping', 'epsilon', 'eta0', 'fit_intercept', 'l1_ratio', 'learning_rate', 'loss', 'max_iter', 'n_iter_no_change', 'n_jobs', 'penalty', 'power_t', 'random_state', 'shuffle', 'tol', 'validation_fraction', 'verbose', 'warm_start'].</pre>
 </div>
 </div>
 </div>
