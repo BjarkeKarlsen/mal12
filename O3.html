@@ -7657,11 +7657,18 @@ Write a detailed description of figure 5.3 (above) for your hand-in.
 
 <p>All concepts in the figure must be explained</p>
 <ul>
-<li>training/generalization error,</li>
-<li>underfit/overfit zone,</li>
-<li>optimal capacity,</li>
-<li>generalization gab,</li>
-<li>and the two axes: x/capacity, y/error.</li></ul></details>
+<li><p>training/generalization error,</p>
+</li>
+<li><p>underfit/overfit zone,</p>
+</li>
+<li><p>optimal capacity,</p>
+</li>
+<li><p>generalization gab,</p>
+</li>
+<li><p>and the two axes: x/capacity, y/error.</p>
+</li></ul></details>
+<img alt="WARNING: could not get image from server." src="https://itundervisning.ase.au.dk/SWMAL/L08/Figs/dl_generalization_error.png" style="height:500px"/>
+<p>We gave Chat-gpt a link to the graph and the Qa description to see if it could solve the assignment, however we have also explained the terms in our own words underneath. This is the result:</p>
 <details><summary>ChatGTP answer</summary>
   1. Training and Generalization Error:
 Training Error (Blue Curve): This curve represents the error (loss) on the training dataset as the capacity (complexity) of the model increases. Initially, the error decreases as the model becomes more complex, indicating better fit to the training data.
@@ -7693,21 +7700,19 @@ x-axis (Capacity): This represents the complexity or capacity of the model. It's
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>The blue curve is training error</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span>
-</pre></div>
-</div>
+<p>On the graph a the y-axis describes the error amount, aka how often the model makes a wrong or partially incorrect prediction. The x-axis describes the capacity of the model, aka how capable or complex the model is. This can be increased by for example adding more neurons per layer, adding more total layers or switching to a more complex model.</p>
+<p><strong>training error</strong>
+The blue curve is training error. The training error curve describes the error percentage in relation to the capacity/complexity of the training model when used on the training data. Naturally when we increase the power of our model, the model should be able to understand and more patterns in the data. This is however not necnecessarily a good thing which will be elaborated in the overfitting segment.</p>
+<p><strong>Generalization error</strong>
+The green curve is the Generalization error. The generalization error describes the error percentage in relation to the capacity/complexity of the training model when used on unseen test data.</p>
+<p><strong>Underfitting</strong>
+Underfitting happens when a model is unable to understand enough of the patterns if any in the training and test data. This results in a higher training- and generalization error. If your model has a high generaliztion and tranning error it could be a sign that you have underfitted your model, and need to increase the complexity of the model. This can be done in many different ways.</p>
+<p><strong>Overfitting</strong>
+Overfitting is when a too capable model is being used on a data set. This results in the model finding patterns in the "noise" of the training data that potntionally aren't relevant and therefore result in a higher generalization error. The Training error is typically very low since the very capable model has found all the patterns and more in the training data. If you experience a high generlization error and a very low training error it could be an indication that you need to reduce the capacity of your model, and the model has overcomplicated its understanding of the data. It could also be because there are patterns in the training data which are not present in the test data, so it would be a good idea to also check that you data-split correctly and mix the data.</p>
+<p><strong>Generalization gap</strong>
+The generalization gap, is the vertical gap between the training error curve and the generalization curve. This means it describes the size of the difference between the errors that occur when the model is used on the training data and when the model is used on the test data.  It typically increases when the model has been overfitted.</p>
+<p><strong>Optimal Capacity</strong>
+The optimal capacity is the perfect complexity for the model where it filters out the noise-patterns and picks up as many of the actual patterns as possible. This results in the training error generalization error and generalization gap being as low as possible. It is what you want to get as close to as possible when fitting you model.</p>
 </div>
 </div>
 </div>
