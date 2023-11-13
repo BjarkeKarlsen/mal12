@@ -7551,7 +7551,7 @@ For the journal:
 </details>
 Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 
-<p>Convolational Neural NEtworks are categories as a deep learning model. It is use for processing grid-like data, such as images and series data. Now for explain the key components of CNN's.</p>
+<p>Convolational Neural Networks are categories as a deep learning model. It is use for processing grid-like data, such as images and series data. Now for explain the key components of CNN's.</p>
 <p>Convolutional layers are layers that apply learnable filters (kernels) to a small regions of the input data. They are not connect to all the data of example a image.</p>
 <p>Pooling Layer reducing the dimensionality, which can be reduce the amount of pixel. There are different pooling strategies maxpooling, avagere pooling. Maxpooling jsut takes the maximum value from a group of neighboring pixels to the input feature map. Avagere pooling is the sum</p>
 <p>Fully Connected Layers is after serveral convolution and pooling layers. There can be more than one of these layers and they act as a traditional neural network. Meaning they connect ever neuron from the previous layer to ever neuron in the next layer.</p>
@@ -7575,6 +7575,7 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">keras</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
 
 <span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="p">),</span> <span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
@@ -7605,6 +7606,10 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 <span class="n">folds</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">kfold</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">test_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Lists to store training metrics at each iteration</span>
+<span class="n">train_losses</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">train_accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+
 
 <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kfold</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
 
@@ -7613,12 +7618,49 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
     <span class="n">X_train_kfold</span><span class="p">,</span> <span class="n">x_val_kfold</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
     <span class="n">y_train_kfold</span><span class="p">,</span> <span class="n">y_val_kfold</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
 
-    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_kfold</span><span class="p">,</span> <span class="n">y_train_kfold</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Lists to store metrics at each iteration for this fold</span>
+    <span class="n">fold_train_losses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fold_train_accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span>  <span class="c1"># You may adjust the number of epochs as needed</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_kfold</span><span class="p">,</span> <span class="n">y_train_kfold</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Record metrics for this iteration</span>
+        <span class="n">fold_train_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">'loss'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">fold_train_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">'accuracy'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+     <span class="c1"># Record metrics for this fold</span>
+    <span class="n">train_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_train_losses</span><span class="p">)</span>
+    <span class="n">train_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_train_accuracies</span><span class="p">)</span>
+
 
     <span class="n">test_loss</span><span class="p">,</span> <span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 
 <span class="n">avg_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Test average accuracy: </span><span class="si">{</span><span class="n">avg_accuracy</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="c1"># Convert lists to NumPy arrays for easier plotting</span>
+<span class="n">train_losses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">train_losses</span><span class="p">)</span>
+<span class="n">train_accuracies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">train_accuracies</span><span class="p">)</span>
+
+<span class="c1"># Plot Training Loss</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">train_losses</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Training Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Training Loss Over Iterations'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Epoch'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Loss'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Plot Training Accuracy</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">train_accuracies</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Training Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Training Accuracy Over Iterations'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Epoch'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Accuracy'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
