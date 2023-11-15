@@ -7560,7 +7560,30 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 <p><strong>Generalization</strong></p>
 <p>We are using a stratified k-fold cross-validation. K-fold is splitting the training set into k folds, then trainingthe model <em>k</em> times, holding out a different fold each time for evaluation. Stratified means maintenance the same propertions of classes as the orignal dataset when creating subsets or fold for training and validation. So the stratified k-fold performs strtified sampling to prodcue folds that contain a representative ratio of each class. With each iteration the code crates a clone of the classifer. With the clone we trains on the training folds and make prediction on the test fold. And then count the number of correct prediction and output the ratio of correct predictions.</p>
 <p><strong>Learning Curve</strong></p>
-<p>Tp</p>
+<p>For the learning curves we plot two plot, one training loss over iterations and training accuracy over iterations. The x-axis is the number of epoch in both plots, and the y-axis is either the loss  or the accuracy.
+Training loss is a measure of how well the machine learning model is performing on the training data. We can observe that thoughout epochs training loss minimize and the predicted value becomes closer to the actual value.
+Training accuracy is the accuracy over each epoch. As we can observe that toughtout the epoch we becomes closer to 1. of course it do not rise for every epoch, but the overall curve does.</p>
+<p><strong>Code setup</strong>
+We are using a CNN and the dataset is frim mnist.</p>
+<ol>
+<li>We load the libary we are using</li>
+<li>We create train and test data from mnist</li>
+<li>We Preprocess the data with reshape and as type and convert y into one-hot encoded formate, so meaning each class is represented as a binary vector.</li>
+<li>Create the CNN model (Explaining with the piceture)</li>
+<li>Set up Stratified K-Fold cross-validation and lists to store training metrics at each iteration</li>
+<li>Loop over folds and use the right data fold</li>
+<li>Loop over epochs where we store each iteration for this fold</li>
+<li>After we put the store epochs data into our metrics for this fold</li>
+<li>Then we evaluate this fold</li>
+<li>All folds is trained and evaluate</li>
+<li>Calculate average test accuracy across folds</li>
+<li>Convert lists to NumPy arrays for easier plotting</li>
+<li>Plot Training Loss</li>
+<li>Plot Accuracy Loss</li>
+</ol>
+<p><strong>CNN setup</strong></p>
+<p><strong>Iterations towards the end-goal</strong></p>
+<p><strong>Conclusion</strong></p>
 <p><strong>"9. Build an CNN via the Keras API and try to achieve the highest possible accuracy on MNIST."</strong></p>
 </div>
 </div>
@@ -7588,7 +7611,6 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 <span class="n">y_test</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">to_categorical</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="c1"># 3, 3 means pixel... creates a 3x 3 pixels.</span>
-<span class="c1"># MaxPooling2D </span>
 <span class="k">def</span> <span class="nf">createModel</span><span class="p">():</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">"same"</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">'relu'</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span> <span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
@@ -7606,7 +7628,7 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 <span class="n">folds</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">kfold</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">test_accuracy</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="c1"># Lists to store training metrics at each iteration</span>
+
 <span class="n">train_losses</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">train_accuracies</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -7618,18 +7640,15 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
     <span class="n">X_train_kfold</span><span class="p">,</span> <span class="n">x_val_kfold</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
     <span class="n">y_train_kfold</span><span class="p">,</span> <span class="n">y_val_kfold</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">train</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
 
-    <span class="c1"># Lists to store metrics at each iteration for this fold</span>
     <span class="n">fold_train_losses</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">fold_train_accuracies</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span>  <span class="c1"># You may adjust the number of epochs as needed</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">17</span><span class="p">):</span> 
         <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_kfold</span><span class="p">,</span> <span class="n">y_train_kfold</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="c1"># Record metrics for this iteration</span>
         <span class="n">fold_train_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">'loss'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">fold_train_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">'accuracy'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
-     <span class="c1"># Record metrics for this fold</span>
     <span class="n">train_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_train_losses</span><span class="p">)</span>
     <span class="n">train_accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fold_train_accuracies</span><span class="p">)</span>
 
@@ -7639,7 +7658,6 @@ Excercise 9 from [HOML], p.496 2nd./p.535 3rd. (slighty modified):
 <span class="n">avg_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Test average accuracy: </span><span class="si">{</span><span class="n">avg_accuracy</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
-<span class="c1"># Convert lists to NumPy arrays for easier plotting</span>
 <span class="n">train_losses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">train_losses</span><span class="p">)</span>
 <span class="n">train_accuracies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">train_accuracies</span><span class="p">)</span>
 
