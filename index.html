@@ -12311,7 +12311,12 @@ We are using a CNN and the dataset is frim mnist.</p>
 <li>Plot Accuracy Loss</li>
 </ol>
 <p><strong>CNN setup</strong></p>
-<p><strong>Iterations towards the end-goal</strong></p>
+<p><strong>Iterations towards the end-goal</strong>
+The first thing that supprised us was the did not come  preparred, but need reshaping.</p>
+<p>In the first creation of the code we inline the epoch in the model. <code>model.fit(X_train_kfold, y_train_kfold, epochs=17, batch_size=64, verbose=0)</code>. The problem here was creating the plots, so we adjust the epochs to be in a forloop. This could probally be done more smoothly, however this works.</p>
+<p><strong>Experiment</strong>
+We did a little expriment, but not so much maybe since we got a good accuracy form the very start. <code>Test average accuracy: 0.9915000200271606</code>. We tried changing the epochs from 10 to 15 to 17... and tried to change how many folds we performed. BJARKE IS GOING TO TEST THE REST ON HES PC LATER AND GIVE SOME NUMBER...
+REMEMBER WHAT WORK AND NOT!</p>
 <p><strong>Conclusion</strong></p>
 <p><strong>"9. Build an CNN via the Keras API and try to achieve the highest possible accuracy on MNIST."</strong></p>
 </div>
